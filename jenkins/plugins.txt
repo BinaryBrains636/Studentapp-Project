@@ -1,0 +1,12 @@
+git
+docker-workflow
+pipeline-stage-view
+docker-common
+pipeline-graph-view
+kubernetes-cli
+aws-credentials
+email-ext
+timestamper
+ws-cleanup
+build-timeout
+matrix-project

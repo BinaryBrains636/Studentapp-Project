@@ -1,0 +1,10 @@
+# Jenkins data
+jenkins_home/
+jenkins-data/
+jenkins-docker-certs/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store

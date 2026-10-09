@@ -1,6 +1,20 @@
 # Complete Steps to Run the Student Application
 
-## Prerequisites
+This document provides multiple ways to run the Student Application:
+
+1. **Local Development** - Run locally with MySQL and Tomcat
+2. **Docker** - Run with Docker Compose
+3. **EC2** - Deploy to AWS EC2
+4. **EKS** - Deploy to AWS EKS
+5. **Jenkins CI/CD** - Automated pipeline
+
+Choose the method that best fits your needs.
+
+---
+
+## Method 1: Local Development
+
+### Prerequisites
 - Java 8 or higher installed
 - Maven installed
 - MySQL Server installed and running
@@ -334,3 +348,255 @@ bash shutdown.sh && sleep 2 && bash startup.sh
 7. **Test the features** - register, view, edit, and delete students
 
 That's it! Your application should now be running with direct database connectivity configured in web.xml.
+
+---
+
+## Method 2: Docker
+
+### Prerequisites
+- Docker installed
+- Docker Compose installed
+
+### Quick Start
+
+```bash
+cd /Users/ishika/Desktop/studentapp
+docker-compose up -d
+```
+
+### Access the Application
+
+Navigate to: `http://localhost:8080/studentapp/`
+
+### Stop the Application
+
+```bash
+docker-compose down
+```
+
+### View Logs
+
+```bash
+docker-compose logs -f
+```
+
+### View Container Status
+
+```bash
+docker-compose ps
+```
+
+---
+
+## Method 3: EC2 Deployment
+
+### Prerequisites
+- Terraform installed
+- AWS CLI configured
+- SSH key pair
+
+### Quick Start
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your configuration
+terraform init
+terraform apply
+```
+
+### Access the Application
+
+After Terraform completes, get the application URL:
+
+```bash
+terraform output application_url
+```
+
+### SSH to EC2 Instance
+
+```bash
+terraform output ssh_connection_string
+```
+
+### View Logs on EC2
+
+```bash
+ssh -i <private-key> ubuntu@<instance-public-dns>
+cd ~/studentapp
+docker compose logs -f
+```
+
+### Destroy Infrastructure
+
+```bash
+terraform destroy
+```
+
+For detailed instructions, see [terraform/README.md](terraform/README.md)
+
+---
+
+## Method 4: EKS Deployment
+
+### Prerequisites
+- Terraform installed
+- AWS CLI configured
+- kubectl installed
+- Docker installed
+
+### Quick Start
+
+#### 1. Create EKS Cluster
+
+```bash
+cd eks-terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your configuration
+terraform init
+terraform apply
+```
+
+#### 2. Configure kubectl
+
+```bash
+aws eks update-kubeconfig --name studentapp-eks-cluster --region us-west-2
+kubectl get nodes
+```
+
+#### 3. Build Docker Image
+
+```bash
+cd ..
+docker build -t studentapp:latest .
+```
+
+#### 4. Deploy to EKS
+
+```bash
+cd k8s
+kubectl apply -f .
+```
+
+#### 5. Access the Application
+
+Get the LoadBalancer URL:
+
+```bash
+kubectl get svc studentapp -n studentapp
+```
+
+Access at: `http://<loadbalancer-url>/studentapp/`
+
+### Destroy Infrastructure
+
+```bash
+cd ../eks-terraform
+terraform destroy
+```
+
+For detailed instructions, see [eks-terraform/README.md](eks-terraform/README.md)
+
+---
+
+## Method 5: Jenkins CI/CD
+
+### Prerequisites
+- Docker installed
+- Docker Compose installed
+- AWS CLI configured
+- kubectl configured
+- EKS cluster running
+
+### Quick Start
+
+#### 1. Start Jenkins
+
+```bash
+cd jenkins
+./setup-jenkins.sh
+```
+
+#### 2. Access Jenkins
+
+Navigate to: `http://localhost:8081`
+
+#### 3. Configure Jenkins
+
+1. Unlock Jenkins with initial admin password
+2. Install suggested plugins
+3. Create admin user
+4. Configure credentials (Docker, AWS, kubeconfig)
+5. Create Pipeline job pointing to your repository
+
+#### 4. Run Pipeline
+
+Click "Build Now" in Jenkins to trigger the CI/CD pipeline.
+
+### Pipeline Stages
+
+1. Checkout code
+2. Build application with Maven
+3. Run unit tests
+4. Build Docker image
+5. Push to Docker registry
+6. Deploy to EKS
+7. Verify deployment
+
+For detailed instructions, see [JENKINS_SETUP.md](JENKINS_SETUP.md) and [jenkins/README.md](jenkins/README.md)
+
+---
+
+## Deployment Comparison
+
+| Method | Complexity | Scalability | Cost | Best For |
+|--------|-----------|-------------|------|----------|
+| Local Development | Low | None | Free | Development, testing |
+| Docker | Low | Medium | Low | Local testing, demo |
+| EC2 | Medium | Medium | Low-Medium | Single instance deployment |
+| EKS | High | High | Medium-High | Production, microservices |
+| Jenkins CI/CD | High | High | Medium-High | Automated deployments |
+
+---
+
+## Quick Reference
+
+### Run Locally
+```bash
+mysql -u root -p < source-code/database/schema.sql
+mvn clean package
+cp target/studentapp-2.2-SNAPSHOT.war <tomcat-path>/webapps/studentapp.war
+<tomcat-path>/bin/startup.sh
+```
+
+### Run with Docker
+```bash
+docker-compose up -d
+```
+
+### Deploy to EC2
+```bash
+cd terraform && terraform apply
+```
+
+### Deploy to EKS
+```bash
+cd eks-terraform && terraform apply
+aws eks update-kubeconfig --name studentapp-eks-cluster
+cd ../k8s && kubectl apply -f .
+```
+
+### Run Jenkins
+```bash
+cd jenkins && ./setup-jenkins.sh
+```
+
+---
+
+## Additional Documentation
+
+- [DATABASE_SETUP.md](DATABASE_SETUP.md) - Database configuration details
+- [terraform/README.md](terraform/README.md) - EC2 deployment guide
+- [eks-terraform/README.md](eks-terraform/README.md) - EKS deployment guide
+- [JENKINS_SETUP.md](JENKINS_SETUP.md) - Jenkins CI/CD setup guide
+- [jenkins/README.md](jenkins/README.md) - Jenkins configuration details

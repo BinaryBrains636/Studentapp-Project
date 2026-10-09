@@ -1,0 +1,23 @@
+# AWS Configuration
+aws_region  = "us-west-2"
+
+# Project Configuration
+project_name = "studentapp"
+environment  = "dev"
+
+# Cluster Configuration
+cluster_name       = "studentapp-eks-cluster"
+kubernetes_version = "1.29"
+
+# VPC Configuration
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["us-west-2a", "us-west-2b"]
+
+# Node Configuration
+node_instance_type = "t3.medium"
+node_min_size      = 1
+node_max_size      = 3
+node_desired_size  = 2
+
+# Security Configuration
+allowed_cidr_blocks = ["0.0.0.0/0"]
