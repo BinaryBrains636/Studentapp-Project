@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0" metadata-complete="true">
+  <display-name>CustomWebApp</display-name>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!-- Database Configuration -->
+  <context-param>
+    <param-name>dbUrl</param-name>
+    <param-value>jdbc:mysql://mysql:3306/studentdb?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbUsername</param-name>
+    <param-value>root</param-value>
+  </context-param>
+  <context-param>
+    <param-name>dbPassword</param-name>
+    <param-value>rootpassword</param-value>
+  </context-param>
+
+  <!-- Servlet Mappings -->
+  <servlet>
+    <servlet-name>RegistrationController</servlet-name>
+    <servlet-class>com.srk.servlet.RegistrationController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegistrationController</servlet-name>
+    <url-pattern>/registrationController</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ViewStudents</servlet-name>
+    <servlet-class>com.srk.servlet.ViewStudents</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewStudents</servlet-name>
+    <url-pattern>/viewStudents</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>EditStudent</servlet-name>
+    <servlet-class>com.srk.servlet.EditStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditStudent</servlet-name>
+    <url-pattern>/editStudent</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>SaveEditedStudent</servlet-name>
+    <servlet-class>com.srk.servlet.SaveEditedStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SaveEditedStudent</servlet-name>
+    <url-pattern>/editStudent2</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DeleteStudent</servlet-name>
+    <servlet-class>com.srk.servlet.DeleteStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteStudent</servlet-name>
+    <url-pattern>/deleteStudent</url-pattern>
+  </servlet-mapping>
+
+</web-app>

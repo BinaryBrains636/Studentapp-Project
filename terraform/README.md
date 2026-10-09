@@ -6,8 +6,7 @@ This Terraform configuration provisions AWS infrastructure for the Student Appli
 
 - Terraform installed (version >= 1.0)
 - AWS CLI configured with appropriate credentials
-- An existing VPC and subnet in your AWS account
-- An SSH key pair for EC2 access
+- An SSH key pair for EC2 access (public and private keys)
 
 ## Architecture
 
@@ -30,9 +29,8 @@ Edit `terraform.tfvars` with your AWS configuration:
 
 ```hcl
 aws_region  = "us-west-2"
-vpc_id      = "vpc-xxxxxxxxxxxxx"
-subnet_id   = "subnet-xxxxxxxxxxxxx"
-public_key_path   = "~/Downloads/studentapp.pem"
+public_key_path   = "~/Downloads/studentapp.pub"
+private_key_path  = "~/Downloads/studentapp.pem"
 ```
 
 ### 2. Initialize Terraform
@@ -75,10 +73,9 @@ terraform output
 | `aws_region` | AWS region | `us-west-2` |
 | `project_name` | Project name | `studentapp` |
 | `environment` | Environment name | `dev` |
-| `vpc_id` | VPC ID (required) | - |
-| `subnet_id` | Subnet ID (required) | - |
 | `instance_type` | EC2 instance type | `t3.micro` |
 | `public_key_path` | Path to SSH public key (required) | - |
+| `private_key_path` | Path to SSH private key (required) | - |
 | `allowed_ssh_cidr` | CIDR for SSH access | `["0.0.0.0/0"]` |
 | `allowed_http_cidr` | CIDR for HTTP access | `["0.0.0.0/0"]` |
 | `allowed_mysql_cidr` | CIDR for MySQL access | `["0.0.0.0/0"]` |
@@ -95,31 +92,25 @@ terraform output
 
 ## Deploying the Application
 
-After Terraform creates the infrastructure:
+The Terraform configuration automatically deploys the application to EC2 during `terraform apply`. The following steps are performed automatically:
 
-1. **Connect to the instance**:
-   ```bash
-   ssh -i ~/Downloads/studentapp.pem ubuntu@<instance-public-dns>
-   ```
+1. Application files (Dockerfile, docker-compose.yml, source-code) are copied to the EC2 instance
+2. Docker Compose is executed to build and start the application containers
+3. The application will be available once Terraform completes
 
-2. **Copy application files**:
-   ```bash
-   scp -i ~/Downloads/studentapp.pem -r \
-     Dockerfile docker-compose.yml .dockerignore source-code/ \
-     ubuntu@<instance-public-dns>:~/studentapp/
-   ```
+After successful deployment, simply access the application at the URL shown in the Terraform outputs:
 
-3. **Build and run the application**:
-   ```bash
-   ssh -i ~/Downloads/studentapp.pem ubuntu@<instance-public-dns>
-   cd ~/studentapp
-   docker compose up -d
-   ```
+```bash
+terraform output application_url
+```
 
-4. **Access the application**:
-   ```
-   http://<instance-public-dns>:8080/studentapp/
-   ```
+For manual troubleshooting or updates, you can connect to the instance:
+
+```bash
+ssh -i <private-key-path> ubuntu@<instance-public-dns>
+cd /home/ubuntu/studentapp
+docker compose logs
+```
 
 ## Destroy Infrastructure
 

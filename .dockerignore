@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+
+# Maven
+target/
+.mvn/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# macOS
+.DS_Store
+
+# Deployment
+deployment/
+tomcat/
+
+# Logs
+*.log
+
+# Documentation
+DATABASE_SETUP.md
+RUN_APPLICATION.md
+AGENTS.md

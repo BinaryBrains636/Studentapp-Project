@@ -25,7 +25,7 @@ output "key_pair_name" {
 
 output "ssh_connection_string" {
   description = "SSH connection string to access the instance"
-  value       = "ssh -i ${var.public_key_path} ubuntu@${aws_instance.studentapp_server.public_dns}"
+  value       = "ssh -i ${var.private_key_path} ubuntu@${aws_instance.studentapp_server.public_dns}"
 }
 
 output "application_url" {

@@ -16,14 +16,16 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "vpc_id" {
-  description = "VPC ID where resources will be created"
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
   type        = string
+  default     = "10.0.0.0/16"
 }
 
-variable "subnet_id" {
-  description = "Subnet ID for EC2 instance"
+variable "subnet_cidr" {
+  description = "CIDR block for subnet"
   type        = string
+  default     = "10.0.1.0/24"
 }
 
 variable "instance_type" {
@@ -34,6 +36,11 @@ variable "instance_type" {
 
 variable "public_key_path" {
   description = "Path to the public SSH key file"
+  type        = string
+}
+
+variable "private_key_path" {
+  description = "Path to the private SSH key file"
   type        = string
 }
 
