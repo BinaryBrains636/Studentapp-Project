@@ -23,6 +23,9 @@ buildNumber.properties
 deployment/
 tomcat/
 
+# Pre-compiled classes
+source-code/student/WEB-INF/classes/
+
 # Maven
 .mvn/
 
